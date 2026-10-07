@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" role="img" aria-label="Abliteration Bulk Creator 3D structure diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080818"/>
+      <stop offset="1" stop-color="#12102e"/>
+    </linearGradient>
+    <linearGradient id="cardTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#241d4f"/>
+      <stop offset="1" stop-color="#1a1538"/>
+    </linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff5a3c"/><stop offset="1" stop-color="#ffd166"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#8b93b8"/>
+    </marker>
+    <style>
+      .t { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; fill:#e8e9ff; }
+      .s { font-family: 'SFMono-Regular', Consolas, monospace; fill:#aab0d8; }
+      .m { font-family: 'SFMono-Regular', Consolas, monospace; fill:#7fd7ff; }
+      .h { font-weight:700; }
+      .dash { stroke:#6b7099; stroke-width:1.6; stroke-dasharray:6 6; fill:none; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  <!-- grid floor -->
+  <g opacity="0.20" stroke="#3a3a6a" stroke-width="1">
+    <path d="M0 700 H1200 M0 660 H1200 M0 620 H1200"/>
+    <path d="M120 760 L260 560 M1040 760 L900 560 M580 760 L580 560"/>
+  </g>
+
+  <!-- title -->
+  <text x="48" y="58" class="t h" font-size="30">Abliteration Bulk Creator — 3D Structure</text>
+  <text x="48" y="84" class="s" font-size="14">CLI → browser fleet → abliteration.ai · verified account + random API key per row</text>
+
+  <!-- ================= LAYER 1: CLI / ORCHESTRATOR ================= -->
+  <g transform="translate(60,120)">
+    <rect x="0" y="0" width="330" height="150" rx="18" fill="url(#cardTop)" stroke="url(#violet)" stroke-width="2.5"/>
+    <rect x="0" y="0" width="330" height="8" rx="4" fill="url(#violet)"/>
+    <text x="22" y="46" class="t h" font-size="19">CLI Orchestrator</text>
+    <text x="22" y="74" class="m" font-size="13.5">src/index.js</text>
+    <text x="22" y="98" class="s" font-size="12.5">worker pool · concurrency · retries</text>
+    <text x="22" y="120" class="s" font-size="12.5">--count  --proxy  --dry-run</text>
+    <text x="22" y="140" class="s" font-size="12.5">config.js  ·  env ABC_*</text>
+  </g>
+
+  <!-- ================= LAYER 2: SUPPORT MODULES ================= -->
+  <g transform="translate(60,320)">
+    <rect x="0" y="0" width="330" height="316" rx="18" fill="url(#cardTop)" stroke="#3a3a6a" stroke-width="2"/>
+    <rect x="0" y="0" width="330" height="8" rx="4" fill="url(#cyan)"/>
+    <text x="22" y="44" class="t h" font-size="19">Support Modules</text>
+
+    <g transform="translate(22,64)">
+      <rect width="286" height="46" rx="10" fill="#0e0d24" stroke="#2c2b52"/>
+      <text x="14" y="20" class="m" font-size="13">emailnator.js</text>
+      <text x="14" y="38" class="s" font-size="11.5">real @gmail.com inboxes</text>
+    </g>
+    <g transform="translate(22,120)">
+      <rect width="286" height="46" rx="10" fill="#0e0d24" stroke="#2c2b52"/>
+      <text x="14" y="20" class="m" font-size="13">proxy.js</text>
+      <text x="14" y="38" class="s" font-size="11.5">rotating pool · sticky sessions</text>
+    </g>
+    <g transform="translate(22,176)">
+      <rect width="286" height="46" rx="10" fill="#0e0d24" stroke="#2c2b52"/>
+      <text x="14" y="20" class="m" font-size="13">mailtm.js</text>
+      <text x="14" y="38" class="s" font-size="11.5">optional fallback inbox</text>
+    </g>
+    <g transform="translate(22,232)">
+      <rect width="286" height="46" rx="10" fill="#0e0d24" stroke="#2c2b52"/>
+      <text x="14" y="20" class="m" font-size="13">output.js  ·  util.js</text>
+      <text x="14" y="38" class="s" font-size="11.5">json · csv · keys.txt · RNG</text>
+    </g>
+  </g>
+
+  <!-- ================= LAYER 3: BROWSER FLEET ================= -->
+  <g transform="translate(470,140)">
+    <rect x="0" y="0" width="300" height="500" rx="18" fill="url(#cardTop)" stroke="url(#cyan)" stroke-width="2.5"/>
+    <rect x="0" y="0" width="300" height="8" rx="4" fill="url(#cyan)"/>
+    <text x="22" y="46" class="t h" font-size="19">Browser Fleet</text>
+    <text x="22" y="72" class="m" font-size="13">abliteration.js</text>
+    <text x="22" y="94" class="s" font-size="12">Playwright + stealth chromium</text>
+
+    <!-- three browser windows stacked in 3D -->
+    <g transform="translate(34,120)">
+      <rect x="0" y="0" width="232" height="108" rx="10" fill="#0b0b20" stroke="#3a3a6a"/>
+      <rect x="0" y="0" width="232" height="22" rx="10" fill="#1b1a40"/>
+      <circle cx="16" cy="11" r="4" fill="#ff6b6b"/><circle cx="30" cy="11" r="4" fill="#ffd166"/><circle cx="44" cy="11" r="4" fill="#34d399"/>
+      <text x="16" y="46" class="s" font-size="11.5">1 · sign-up</text>
+      <text x="16" y="66" class="s" font-size="11.5">2 · read 6-digit code</text>
+      <text x="16" y="86" class="s" font-size="11.5">3 · verify + session</text>
+    </g>
+    <g transform="translate(48,244)">
+      <rect x="0" y="0" width="232" height="86" rx="10" fill="#0b0b20" stroke="#3a3a6a"/>
+      <rect x="0" y="0" width="232" height="22" rx="10" fill="#1b1a40"/>
+      <circle cx="16" cy="11" r="4" fill="#ff6b6b"/><circle cx="30" cy="11" r="4" fill="#ffd166"/><circle cx="44" cy="11" r="4" fill="#34d399"/>
+      <text x="16" y="46" class="s" font-size="11.5">4 · parse active_project</text>
+      <text x="16" y="66" class="s" font-size="11.5">5 · POST api-keys</text>
+    </g>
+    <g transform="translate(62,352)">
+      <rect x="0" y="0" width="232" height="64" rx="10" fill="#0b0b20" stroke="#34d399"/>
+      <text x="16" y="28" class="s" font-size="11.5">6 · capture secret_key</text>
+      <text x="16" y="48" class="m" font-size="12.5">ak_••••••••••</text>
+    </g>
+
+    <!-- captcha note -->
+    <g transform="translate(34,430)">
+      <rect width="232" height="46" rx="10" fill="#151230" stroke="#6b5cff"/>
+      <text x="14" y="20" class="s" font-size="11.5">Turnstile solved via</text>
+      <text x="14" y="38" class="s" font-size="11.5">real mouse coords + stealth</text>
+    </g>
+  </g>
+
+  <!-- ================= LAYER 4: TARGET ================= -->
+  <g transform="translate(846,140)">
+    <rect x="0" y="0" width="300" height="500" rx="18" fill="url(#cardTop)" stroke="#3a3a6a" stroke-width="2.5"/>
+    <rect x="0" y="0" width="300" height="8" rx="4" fill="url(#flame)"/>
+    <text x="22" y="46" class="t h" font-size="19">abliteration.ai</text>
+    <text x="22" y="72" class="s" font-size="12">Next.js console + first-party API</text>
+
+    <g transform="translate(22,98)">
+      <rect width="256" height="74" rx="10" fill="#0e0d24" stroke="#2c2b52"/>
+      <text x="14" y="26" class="m" font-size="12">POST /auth/password</text>
+      <text x="14" y="44" class="s" font-size="11">  /sign-up</text>
+      <text x="14" y="62" class="s" font-size="11">  /verify → { code }</text>
+    </g>
+    <g transform="translate(22,186)">
+      <rect width="256" height="74" rx="10" fill="#0e0d24" stroke="#2c2b52"/>
+      <text x="14" y="26" class="m" font-size="12">GET /api/console/v1</text>
+      <text x="14" y="44" class="s" font-size="11">  /session</text>
+      <text x="14" y="62" class="s" font-size="11">  → active_project.id</text>
+    </g>
+    <g transform="translate(22,274)">
+      <rect width="256" height="74" rx="10" fill="#0e0d24" stroke="#2c2b52"/>
+      <text x="14" y="26" class="m" font-size="12">POST .../api-keys</text>
+      <text x="14" y="44" class="s" font-size="11">  Idempotency-Key</text>
+      <text x="14" y="62" class="s" font-size="11">  → secret_key: ak_…</text>
+    </g>
+
+    <g transform="translate(22,372)">
+      <rect width="256" height="96" rx="10" fill="#131029" stroke="url(#violet)"/>
+      <text x="14" y="26" class="t h" font-size="14">Guardrails</text>
+      <text x="14" y="48" class="s" font-size="11">Cloudflare Turnstile</text>
+      <text x="14" y="66" class="s" font-size="11">IP reputation → HTTP 403</text>
+      <text x="14" y="84" class="s" font-size="11">→ needs residential proxy</text>
+    </g>
+  </g>
+
+  <!-- ================= OUTPUTS ================= -->
+  <g transform="translate(470,668)">
+    <rect x="0" y="0" width="676" height="70" rx="14" fill="url(#cardTop)" stroke="url(#green)" stroke-width="2"/>
+    <text x="20" y="30" class="t h" font-size="15">Outputs → accounts/</text>
+    <text x="20" y="54" class="m" font-size="12.5">accounts.json   accounts.csv   keys.txt (email:apiKey)   summary.json</text>
+  </g>
+
+  <!-- ================= ARROWS ================= -->
+  <g>
+    <path d="M390 195 C 430 195, 430 250, 470 250" fill="none" stroke="#8b93b8" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M390 478 C 430 478, 430 400, 470 400" fill="none" stroke="#8b93b8" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M770 250 C 810 250, 810 190, 846 190" fill="none" stroke="#8b93b8" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M996 640 C 996 660, 900 660, 860 668" fill="none" stroke="#8b93b8" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M630 640 L 700 668" fill="none" stroke="#8b93b8" stroke-width="2" marker-end="url(#arrow)"/>
+  </g>
+
+  <text x="1152" y="740" class="s" font-size="11" text-anchor="end">v1 · MIT · Node 18+</text>
+</svg>

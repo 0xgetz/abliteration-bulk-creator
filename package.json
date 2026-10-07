@@ -1,0 +1,46 @@
+{
+  "name": "abliteration-bulk-creator",
+  "version": "1.0.0",
+  "description": "Bulk-create verified abliteration.ai accounts, each with its own randomly-named API key — browser-driven, rotating-proxy ready.",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "abliteration-bulk": "src/index.js"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dry-run": "node src/index.js --dry-run",
+    "test": "node tests/selftest.js",
+    "postinstall": "playwright install chromium"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "keywords": [
+    "abliteration",
+    "abliteration-ai",
+    "bulk-account-creator",
+    "api-key",
+    "automation",
+    "playwright",
+    "rotating-proxy",
+    "emailnator",
+    "headless-chromium",
+    "turnstile"
+  ],
+  "author": "abliteration-bulk-creator contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/octra42/abliteration-bulk-creator.git"
+  },
+  "homepage": "https://github.com/octra42/abliteration-bulk-creator#readme",
+  "bugs": {
+    "url": "https://github.com/octra42/abliteration-bulk-creator/issues"
+  }
+}

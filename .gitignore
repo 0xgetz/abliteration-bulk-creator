@@ -1,0 +1,9 @@
+node_modules/
+accounts/
+*.log
+.env
+.DS_Store
+.abc-cache/
+
+# Your real proxy list — never commit credentials.
+proxy.txt

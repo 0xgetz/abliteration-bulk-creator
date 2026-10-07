@@ -1,0 +1,14 @@
+[
+  {
+    "index": 0,
+    "email": "agent.4f2a1b@gmail.com",
+    "password": "Hidden-Example-Password-Only",
+    "apiKey": "ak_example000000000000000000000000000000",
+    "keyName": "key-cobalt-falcon-4f2a",
+    "projectId": "proj_example0000000000",
+    "proxy": "http://***:***@gw.example.com:8000/",
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "durationMs": 42150,
+    "status": "ok"
+  }
+]

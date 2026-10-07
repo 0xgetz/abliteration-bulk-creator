@@ -1,0 +1,25 @@
+# Abliteration Bulk Creator — proxy list.
+#
+# One proxy per line. Blank lines and lines starting with `#` are ignored.
+# Supported formats (scheme defaults to http; override with ABC_PROXY_SCHEME):
+#
+#   host:port
+#   host:port:user:pass
+#   user:pass@host:port
+#   http://user:pass@host:port
+#   socks5://user:pass@host:port
+#
+# Examples (replace with your own residential/mobile proxies):
+
+# --- host:port:user:pass (very common) ---
+# 31.59.20.176:6754:myuser:mypassword
+# 45.38.107.97:6014:myuser:mypassword
+
+# --- user:pass@host:port ---
+# myuser:mypassword@31.59.20.176:6754
+
+# --- scheme + credentials ---
+# socks5://myuser:mypassword@31.59.20.176:6754
+
+# --- plain host:port ---
+# 31.59.20.176:6754
