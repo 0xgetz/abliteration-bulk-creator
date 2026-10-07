@@ -29,6 +29,7 @@
  */
 
 const { Emailnator } = require("./emailnator");
+const { EmailMux } = require("./emailmux");
 const { MailTm } = require("./mailtm");
 const { toPlaywrightProxy, redact } = require("./proxy");
 const {
@@ -83,6 +84,12 @@ class AbliterationAccountCreator {
     context.setDefaultNavigationTimeout(cfg.navigationTimeoutMs);
 
     const page = await context.newPage();
+    const emailmux = new EmailMux({
+      base: cfg.emailmuxBase,
+      apiKey: cfg.emailmuxApiKey,
+      domains: cfg.emailmuxDomains,
+      logger: this.logger,
+    });
     const emailnator = new Emailnator({
       base: cfg.emailnatorBase,
       logger: this.logger,
@@ -90,9 +97,9 @@ class AbliterationAccountCreator {
 
     let record;
     try {
-      // 1. Provision an inbox. Prefer emailnator (real @gmail.com); fall back
-      //    to mail.tm when configured.
-      const { email, inbox } = await this._provisionInbox(emailnator);
+      // 1. Provision an inbox. Prefer emailmux (real @gmail.com); fall back to
+      //    emailnator, then optionally mail.tm.
+      const { email, inbox } = await this._provisionInbox({ emailmux, emailnator });
       this.logger.info?.(`  inbox: ${email} (${inbox.name})`);
 
       // 2. Sign up.
@@ -152,15 +159,32 @@ class AbliterationAccountCreator {
   // ---- steps ---------------------------------------------------------------
 
   /**
-   * Provision an inbox, preferring emailnator (real @gmail.com) and optionally
-   * falling back to mail.tm.
+   * Provision an inbox. Prefers emailmux (real @gmail.com), then emailnator,
+   * then optionally mail.tm.
    * @returns {Promise<{email:string, inbox:{name:string, waitForCode:Function}}>}
    */
-  async _provisionInbox(emailnator) {
+  async _provisionInbox({ emailmux, emailnator }) {
     const cfg = this.config;
     const providers = [];
 
-    if (cfg.inboxProvider !== "mailtm") {
+    const want = cfg.inboxProvider;
+    if (want !== "emailnator" && want !== "mailtm") {
+      providers.push({
+        name: "emailmux",
+        gen: async () => {
+          const { email } = await emailmux.generateAddress();
+          return {
+            email,
+            inbox: {
+              name: "emailmux",
+              waitForCode: (addr, opts) => emailmux.waitForCode(addr, opts),
+            },
+          };
+        },
+      });
+    }
+
+    if (want !== "emailmux" && want !== "mailtm") {
       providers.push({
         name: "emailnator",
         gen: async () => {

@@ -10,7 +10,8 @@
 [![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![许可证: MIT](https://img.shields.io/badge/%E8%AE%B8%E5%8F%AF%E8%AF%81-MIT-3DA639?style=flat-square)](../LICENSE)
 [![平台](https://img.shields.io/badge/%E5%B9%B3%E5%8F%B0-abliteration.ai-FF5A3C?style=flat-square)](https://abliteration.ai/)
-[![收件箱](https://img.shields.io/badge/%E6%94%B6%E4%BB%B6%E7%AE%B1-emailnator-F59E0B?style=flat-square)](https://www.emailnator.com/)
+[![Inbox](https://img.shields.io/badge/Inbox-emailmux-F59E0B?style=flat-square)](https://emailmux.com/)
+[![Fallback](https://img.shields.io/badge/Fallback-emailnator-8B5CF6?style=flat-square)](https://www.emailnator.com/)
 [![代理](https://img.shields.io/badge/%E4%BB%A3%E7%90%86-%E8%BD%AE%E6%8D%A2-06B6D4?style=flat-square)](../README.md#rotating-proxies)
 [![Stealth](https://img.shields.io/badge/Stealth-Chromium-7C5CFF?style=flat-square)](../README.md#how-it-works)
 [![Made with](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F-EF4444?style=flat-square)]()
@@ -27,8 +28,8 @@
 **Abliteration Bulk Creator** 自动化了 abliteration.ai 的整个注册流程。对每个账号：
 
 1. 分配下一个**轮换代理**（可选，但强烈推荐）；
-2. 通过 **emailnator** 创建一个全新的真实 `@gmail.com` 收件箱
-   （可选回退到 **mail.tm**）；
+2. 通过 **emailmux** 创建一个全新的真实 `@gmail.com` 收件箱
+   （并回退到 **emailnator** 及可选的 **mail.tm**）；
 3. 通过**带 stealth 补丁的无头 Chromium** 在 `abliteration.ai` 注册
    （使 Cloudflare Turnstile 像人类一样通过）；
 4. 从收件箱中读取 6 位验证码并完成验证；
@@ -48,7 +49,7 @@
 ## 特性
 
 - 一条命令即可创建任意数量的账号。
-- 通过 **emailnator** 获取真实 `@gmail.com` 收件箱 — 无需配置。
+- 通过 **emailmux** 获取真实 `@gmail.com` 收件箱（回退 emailnator）— 无需配置。
 - 自动邮件验证（读取 6 位验证码）。
 - 随机且易读的 API 密钥名（`key-cobalt-falcon-4f2a`）。
 - 使用 CSPRNG 生成强随机密码。
@@ -121,6 +122,14 @@ GET  /api/console/v1/session  -> active_project.id
 POST /api/console/v1/projects/:id/api-keys   (Idempotency-Key) -> secret_key: ak_…
 ```
 
+## 收件箱服务商
+
+- **emailmux**（默认）— 真实 `@gmail.com`。无需密钥，但按 IP 限流，建议搭配 `proxy.txt`。
+- **emailnator** — 回退项，同样是真实 `@gmail.com`。
+- **mail.tm** — 非 Gmail；如需启用请设 `ABC_INBOX_FALLBACK=true`。
+
+`ABC_INBOX_PROVIDER=emailmux|emailnator|mailtm` · `ABC_EMAILMUX_API_KEY`（可选）。
+
 ## 轮换代理
 
 - **`proxy.txt` 文件** — 最简单。在项目旁放置 `proxy.txt` 即可自动加载
@@ -147,7 +156,7 @@ node src/index.js -n 25
 src/index.js         CLI：工作池、重试、输出
 src/config.js        ABC_* 配置
 src/abliteration.js  Playwright 自动化
-src/emailnator.js    真实 @gmail.com 收件箱
+src/emailmux.js      真实 @gmail.com 收件箱
 src/mailtm.js        可选回退
 src/proxy.js         轮换代理池 + proxy.txt 解析
 src/output.js        JSON/CSV/txt 导出

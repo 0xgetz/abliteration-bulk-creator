@@ -44,6 +44,13 @@ const config = {
   // emailnator inbox provider
   emailnatorBase: process.env.ABC_EMAILNATOR_URL || "https://www.emailnator.com",
 
+  // emailmux inbox provider (real @gmail.com)
+  emailmuxBase: process.env.ABC_EMAILMUX_URL || "https://emailmux.com",
+  // Optional Bearer API key; when set the account API is used.
+  emailmuxApiKey: process.env.ABC_EMAILMUX_API_KEY || "",
+  // Address suffixes to request from emailmux ("gmail" => name@gmail.com).
+  emailmuxDomains: list(process.env.ABC_EMAILMUX_DOMAINS, ["gmail"]),
+
   // ---- Browser ---------------------------------------------------------------
   headless: bool(process.env.ABC_HEADLESS, true),
   browserChannel: process.env.ABC_BROWSER_CHANNEL || "", // "", "chrome", "msedge"
@@ -85,8 +92,9 @@ const config = {
   // How long to poll the inbox for a verification code, per step.
   codeTimeoutMs: int(process.env.ABC_CODE_TIMEOUT_MS, 180000),
   codePollMs: int(process.env.ABC_CODE_POLL_MS, 5000),
-  // Which inbox to use: "emailnator" (default, real @gmail.com) or "mailtm".
-  inboxProvider: process.env.ABC_INBOX_PROVIDER || "emailnator",
+  // Which inbox to use: "emailmux" (default, real @gmail.com), "emailnator"
+  // (also real @gmail.com) or "mailtm" (non-Gmail fallback).
+  inboxProvider: process.env.ABC_INBOX_PROVIDER || "emailmux",
   inboxFallback: bool(process.env.ABC_INBOX_FALLBACK, true),
 };
 

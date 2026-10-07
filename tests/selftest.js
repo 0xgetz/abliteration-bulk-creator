@@ -19,14 +19,29 @@ const path = require("path");
 const { parseProxyLine, loadProxyFile, resolveProxyList, ProxyPool, redact, toPlaywrightProxy } =
   require("../src/proxy");
 const { extractCode, stripHtml } = require("../src/emailnator");
+const { EmailMux } = require("../src/emailmux");
 const { randomKeyName, randomPassword, randomEmailLocal, randomName } = require("../src/util");
 const { writeAccounts, writeSummary } = require("../src/output");
 
 let passed = 0;
+const pending = [];
 function ok(name, fn) {
-  fn();
+  const out = fn();
+  if (out && typeof out.then === "function") {
+    pending.push(
+      out.then(() => {
+        passed += 1;
+        console.log(`  ok  ${name}`);
+      }),
+    );
+    return;
+  }
   passed += 1;
   console.log(`  ok  ${name}`);
+}
+async function flush() {
+  await Promise.all(pending);
+  passed = passed; // all resolved
 }
 
 console.log("proxy parsing");
@@ -57,7 +72,10 @@ ok("resolveProxyList merges list + file", () => {
   assert.strictEqual(list.length, 3);
 });
 ok("ProxyPool round-robin", () => {
-  const pool = new ProxyPool({ proxyList: ["http://a:p@1.1.1.1:1", "http://b:q@2.2.2.2:2"] });
+  const pool = new ProxyPool({
+    proxyList: ["http://a:p@1.1.1.1:1", "http://b:q@2.2.2.2:2"],
+    proxyFile: "",
+  });
   assert.strictEqual(pool.assign(0), "http://a:p@1.1.1.1:1");
   assert.strictEqual(pool.assign(1), "http://b:q@2.2.2.2:2");
   assert.strictEqual(pool.assign(2), "http://a:p@1.1.1.1:1");
@@ -79,6 +97,48 @@ ok("extractCode from sentence", () =>
 ok("extractCode from html body", () =>
   assert.strictEqual(extractCode(stripHtml("<b>code</b> <i>142062</i> expires")), "142062"));
 ok("extractCode none", () => assert.strictEqual(extractCode("no digits here"), null));
+
+console.log("emailmux provider");
+ok("public mode by default", () => {
+  const em = new EmailMux({});
+  assert.strictEqual(em.mode, "public");
+});
+ok("api mode with key", () => {
+  const em = new EmailMux({ apiKey: "abc" });
+  assert.strictEqual(em.mode, "api");
+  assert.strictEqual(em._headers().Authorization, "Bearer abc");
+});
+ok("generateAddress uses /generate-email in public mode", () => {
+  const calls = [];
+  const fakeFetch = async (url) => {
+    calls.push(url);
+    return { ok: true, status: 200, text: async () => JSON.stringify({ email: "x@gmail.com", status: "success" }) };
+  };
+  const em = new EmailMux({ fetch: fakeFetch, logger: { warn() {} } });
+  return em.generateAddress().then((r) => {
+    assert.strictEqual(r.email, "x@gmail.com");
+    assert.ok(calls[0].endsWith("/generate-email"));
+  });
+});
+ok("generateAddress rejects non-gmail when gmail requested", () => {
+  const fakeFetch = async () => ({
+    ok: true,
+    status: 200,
+    text: async () => JSON.stringify({ email: "x@outlook.com", status: "success" }),
+  });
+  const em = new EmailMux({ fetch: fakeFetch, logger: { warn() {} } });
+  return em.generateAddress().then(
+    () => assert.fail("should have thrown"),
+    (e) => assert.match(e.message, /expected @gmail\.com/),
+  );
+});
+ok("waitForCode reads code from emailmux message", () => {
+  const em = new EmailMux({ logger: { warn() {} } });
+  em.listMessages = async () => [{ subject: "", body: "Your verification code is 998877" }];
+  return em.waitForCode("x@gmail.com", { timeoutMs: 2000, pollMs: 50, logger: { warn() {} } }).then((r) => {
+    assert.strictEqual(r.code, "998877");
+  });
+});
 
 console.log("generators");
 ok("randomKeyName format", () => assert.match(randomKeyName(), /^key-[a-z]+-[a-z]+-[0-9a-f]{4}$/));
@@ -111,4 +171,6 @@ ok("writeAccounts + writeSummary", () => {
 });
 
 fs.rmSync(tmpDir, { recursive: true, force: true });
-console.log(`\nall ${passed} checks passed`);
+flush().then(() => {
+  console.log(`\nall ${passed} checks passed`);
+});

@@ -10,7 +10,8 @@
 [![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?style=flat-square)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-abliteration.ai-FF5A3C?style=flat-square)](https://abliteration.ai/)
-[![Inbox](https://img.shields.io/badge/Inbox-emailnator-F59E0B?style=flat-square)](https://www.emailnator.com/)
+[![Inbox](https://img.shields.io/badge/Inbox-emailmux-F59E0B?style=flat-square)](https://emailmux.com/)
+[![Fallback](https://img.shields.io/badge/Fallback-emailnator%20%C2%B7%20mail.tm-8B5CF6?style=flat-square)](https://www.emailnator.com/)
 [![Proxy](https://img.shields.io/badge/Proxy-Rotating-06B6D4?style=flat-square)](#-rotating-proxies)
 [![Stealth](https://img.shields.io/badge/Stealth-Chromium-7C5CFF?style=flat-square)](#-how-it-works)
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](#)
@@ -28,8 +29,8 @@
 pipeline. For every account it:
 
 1. assigns the next **rotating proxy** (optional, but strongly recommended);
-2. provisions a fresh, real `@gmail.com` inbox on **emailnator**
-   (with an optional **mail.tm** fallback);
+2. provisions a fresh, real `@gmail.com` inbox on **emailmux**
+   (with **emailnator** and optional **mail.tm** fallbacks);
 3. signs up on `abliteration.ai` through a **stealth-patched headless Chromium**
    (so the Cloudflare Turnstile challenge passes the way it does for a human);
 4. reads the 6-digit verification code straight out of the inbox and verifies;
@@ -52,12 +53,12 @@ just a command.
 ## Features
 
 - One command to create any number of accounts.
-- Real `@gmail.com` inboxes via **emailnator** — nothing to configure.
+- Real `@gmail.com` inboxes via **emailmux** (emailnator fallback) — no API key needed.
 - Automatic email verification (reads the 6-digit code from the inbox).
 - Random, human-readable API-key names (`key-cobalt-falcon-4f2a`).
 - Random strong passwords, generated with a CSPRNG.
 - First-party API calls for the key mint (with the required `Idempotency-Key`).
-- Rotating-proxy support: static list **or** sticky-session gateway template.
+- Rotating-proxy support: `proxy.txt` file, static list **or** sticky-session gateway template.
 - Concurrency, retries and per-account delay, so a run is gentle and robust.
 - Outputs JSON, CSV and `email:apiKey` text for easy piping.
 - Dry-run mode to plan a batch with no network calls.
@@ -149,8 +150,11 @@ Every option can be set through the environment instead. Copy
 | `ABC_MIN_DELAY_MS`, `ABC_MAX_DELAY_MS` | Random pause between accounts. |
 | `ABC_MAX_RETRIES` | Retries per account. |
 | `ABC_ORIGIN` | Target origin (default `https://abliteration.ai`). |
+| `ABC_EMAILMUX_URL` | emailmux base URL (default `https://emailmux.com`). |
+| `ABC_EMAILMUX_API_KEY` | Optional emailmux Bearer API key (uses the account API). |
+| `ABC_EMAILMUX_DOMAINS` | Address suffixes to request (default `gmail`). |
 | `ABC_EMAILNATOR_URL` | emailnator base URL. |
-| `ABC_INBOX_PROVIDER` | `emailnator` (default) or `mailtm`. |
+| `ABC_INBOX_PROVIDER` | `emailmux` (default), `emailnator`, or `mailtm`. |
 | `ABC_INBOX_FALLBACK` | Enable the mail.tm fallback (default `false`). |
 | `ABC_PROXIES` | Comma-separated proxy list. |
 | `ABC_PROXY_FILE` | Proxy list file (default `proxy.txt`). |
@@ -189,14 +193,36 @@ account lifecycle is:
        │  6-digit code                                     │
        │                                                   ▼
 ┌──────────────┐                                 ┌──────────────────┐
-│  emailnator  │  real @gmail.com inbox          │  accounts/       │
-│  inbox       │                                 │  json·csv·txt    │
+│  emailmux /  │  real @gmail.com inbox          │  accounts/       │
+│  emailnator  │                                 │  json·csv·txt    │
 └──────────────┘                                 └──────────────────┘
 ```
 
 Because the sign-up request embeds a **Turnstile token** minted inside the
 page, a pure HTTP client cannot register accounts — the token and the session
 cookie must come from a real browser. That is why the tool drives one.
+
+## Inbox providers
+
+Abliteration.ai wants a real `@gmail.com` address, so the tool provisions one
+per account:
+
+| Provider | Default | Notes |
+| --- | --- | --- |
+| **emailmux** | ✅ | Real `@gmail.com`. Public endpoints need no key but are rate-limited per IP — pair with `proxy.txt`. An optional `ABC_EMAILMUX_API_KEY` switches to the account (Bearer) API for higher limits. |
+| **emailnator** | fallback | Real `@gmail.com`, also no key. Used automatically if emailmux cannot issue an address. |
+| **mail.tm** | off | Non-Gmail; only enable (`ABC_INBOX_FALLBACK=true`) if the target accepts it. |
+
+```bash
+# Use emailmux (default)
+node src/index.js -n 5
+
+# Use emailnator instead
+ABC_INBOX_PROVIDER=emailnator node src/index.js -n 5
+
+# emailmux with an account API key (higher limits)
+ABC_EMAILMUX_API_KEY=your_key node src/index.js -n 25
+```
 
 ## Rotating proxies
 
@@ -247,8 +273,9 @@ abliteration-bulk-creator/
 │   ├── index.js         # CLI entry point — worker pool, retries, output
 │   ├── config.js        # all defaults, overridable via ABC_* env vars
 │   ├── abliteration.js  # the account automation (Playwright flow)
-│   ├── emailnator.js    # real @gmail.com inbox provider
-│   ├── mailtm.js        # optional fallback inbox provider
+│   ├── emailmux.js      # real @gmail.com inbox provider (default)
+│   ├── emailnator.js    # real @gmail.com inbox provider (fallback)
+│   ├── mailtm.js        # optional non-Gmail fallback provider
 │   ├── proxy.js         # rotating proxy pool + Playwright adapter
 │   ├── output.js        # JSON / CSV / keys.txt exporters
 │   └── util.js          # CSPRNG names, passwords, timing
@@ -292,8 +319,9 @@ done
 
 | Symptom | Cause & fix |
 | --- | --- |
-| `signup blocked (HTTP 403 …)` | Your IP is flagged. Use a clean residential proxy (`ABC_PROXY_TEMPLATE` / `ABC_PROXIES`). |
-| `Timed out waiting for the verification code` | emailnator is slow or rate-limited. Raise `ABC_CODE_TIMEOUT_MS`, or enable the mail.tm fallback. |
+| `signup blocked (HTTP 403 …)` | Your IP is flagged. Use a clean residential proxy (`ABC_PROXY_TEMPLATE` / `ABC_PROXIES` / `proxy.txt`). |
+| `emailmux ... -> 429` | emailmux's daily per-IP quota is exhausted. Rotate proxies, use `ABC_EMAILMUX_API_KEY`, or set `ABC_INBOX_PROVIDER=emailnator`. |
+| `Timed out waiting for the verification code` | The inbox is slow or rate-limited. Raise `ABC_CODE_TIMEOUT_MS`, or enable the mail.tm fallback. |
 | `emailnator: no @gmail.com address` | The generator returned a non-Gmail domain; the client retries automatically. Extreme rate-limits — slow down. |
 | Turnstile stays interactive | Datacenter IP. Switch to a residential/mobile proxy; the checkbox clears itself on a clean IP. |
 | `session lookup failed (HTTP 401)` | The verification did not complete. Run with `--headful` to watch the flow. |

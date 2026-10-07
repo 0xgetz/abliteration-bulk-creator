@@ -10,7 +10,8 @@
 [![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![Licença: MIT](https://img.shields.io/badge/Licen%C3%A7a-MIT-3DA639?style=flat-square)](../LICENSE)
 [![Plataforma](https://img.shields.io/badge/Plataforma-abliteration.ai-FF5A3C?style=flat-square)](https://abliteration.ai/)
-[![Caixa de entrada](https://img.shields.io/badge/Caixa-emailnator-F59E0B?style=flat-square)](https://www.emailnator.com/)
+[![Inbox](https://img.shields.io/badge/Inbox-emailmux-F59E0B?style=flat-square)](https://emailmux.com/)
+[![Fallback](https://img.shields.io/badge/Fallback-emailnator-8B5CF6?style=flat-square)](https://www.emailnator.com/)
 [![Proxy](https://img.shields.io/badge/Proxy-Rotativo-06B6D4?style=flat-square)](../README.md#-rotating-proxies)
 [![Stealth](https://img.shields.io/badge/Stealth-Chromium-7C5CFF?style=flat-square)](../README.md#how-it-works)
 [![Feito com](https://img.shields.io/badge/Feito%20com-%E2%9D%A4%EF%B8%8F-EF4444?style=flat-square)]()
@@ -28,8 +29,8 @@
 abliteration.ai. Para cada conta:
 
 1. atribui o próximo **proxy rotativo** (opcional, mas muito recomendado);
-2. provisiona uma caixa real de `@gmail.com` no **emailnator**
-   (com fallback opcional do **mail.tm**);
+2. provisiona uma caixa real de `@gmail.com` no **emailmux**
+   (com fallback do **emailnator** e, opcionalmente, **mail.tm**);
 3. cadastra em `abliteration.ai` através de um **Chromium headless com patch
    stealth** (para que o desafio Cloudflare Turnstile passe como passaria para
    um humano);
@@ -52,7 +53,7 @@ nuvem — apenas um comando.
 ## Recursos
 
 - Um comando para criar qualquer quantidade de contas.
-- Caixas reais de `@gmail.com` via **emailnator** — sem configuração.
+- Caixas reais de `@gmail.com` via **emailmux** (fallback emailnator) — sem configuração.
 - Verificação automática do e-mail (lê o código de 6 dígitos).
 - Nomes de chave de API aleatórios e legíveis (`key-cobalt-falcon-4f2a`).
 - Senhas fortes geradas com CSPRNG.
@@ -124,6 +125,14 @@ GET  /api/console/v1/session  -> active_project.id
 POST /api/console/v1/projects/:id/api-keys   (Idempotency-Key) -> secret_key: ak_…
 ```
 
+## Provedores de caixa de entrada
+
+- **emailmux** (padrão) — `@gmail.com` real. Sem chave, mas com limite por IP; combine com `proxy.txt`.
+- **emailnator** — fallback, também `@gmail.com` real.
+- **mail.tm** — não é Gmail; ative com `ABC_INBOX_FALLBACK=true` se precisar.
+
+`ABC_INBOX_PROVIDER=emailmux|emailnator|mailtm` · `ABC_EMAILMUX_API_KEY` (opcional).
+
 ## Proxies rotativos
 
 - **Arquivo `proxy.txt`** — o mais fácil. Coloque um `proxy.txt` junto ao projeto
@@ -150,7 +159,7 @@ node src/index.js -n 25
 src/index.js         CLI: pool de workers, retentativas, saída
 src/config.js        configuração ABC_*
 src/abliteration.js  automação com Playwright
-src/emailnator.js    caixas reais @gmail.com
+src/emailmux.js      caixas reais @gmail.com
 src/mailtm.js        fallback opcional
 src/proxy.js         pool de proxies rotativos
 src/output.js        exportadores JSON/CSV/txt

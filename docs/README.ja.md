@@ -10,7 +10,8 @@
 [![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![ライセンス: MIT](https://img.shields.io/badge/%E3%83%A9%E3%82%A4%E3%82%BB%E3%83%B3%E3%82%B9-MIT-3DA639?style=flat-square)](../LICENSE)
 [![プラットフォーム](https://img.shields.io/badge/%E3%83%97%E3%83%A9%E3%83%83%E3%83%88%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0-abliteration.ai-FF5A3C?style=flat-square)](https://abliteration.ai/)
-[![受信箱](https://img.shields.io/badge/%E5%8F%97%E4%BF%A1%E7%AE%B1-emailnator-F59E0B?style=flat-square)](https://www.emailnator.com/)
+[![Inbox](https://img.shields.io/badge/Inbox-emailmux-F59E0B?style=flat-square)](https://emailmux.com/)
+[![Fallback](https://img.shields.io/badge/Fallback-emailnator-8B5CF6?style=flat-square)](https://www.emailnator.com/)
 [![プロキシ](https://img.shields.io/badge/%E3%83%97%E3%83%AD%E3%82%AD%E3%82%B7-%E3%83%AD%E3%83%BC%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-06B6D4?style=flat-square)](../README.md#-rotating-proxies)
 [![Stealth](https://img.shields.io/badge/Stealth-Chromium-7C5CFF?style=flat-square)](../README.md#how-it-works)
 [![Made with](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F-EF4444?style=flat-square)]()
@@ -28,8 +29,8 @@
 します。各アカウントについて:
 
 1. 次の**ローテーションプロキシ**を割り当てます（任意、ただし強く推奨）;
-2. **emailnator** で本物の `@gmail.com` 受信箱を新規作成します
-   （**mail.tm** への任意フォールバック付き）;
+2. **emailmux** で本物の `@gmail.com` 受信箱を新規作成します
+   （**emailnator** および任意の **mail.tm** フォールバック付き）;
 3. **stealth 適用のヘッドレス Chromium** で `abliteration.ai` に登録します
    （Cloudflare Turnstile が人間と同じように通過するため）;
 4. 受信箱から 6 桁の確認コードを読み取り、検証します;
@@ -51,7 +52,7 @@
 ## 特徴
 
 - 1 つのコマンドで任意数のアカウントを作成。
-- **emailnator** による本物の `@gmail.com` 受信箱 — 設定不要。
+- **emailmux** による本物の `@gmail.com` 受信箱（emailnator フォールバック）— 設定不要。
 - メールの自動検証（6 桁コードを読み取り）。
 - ランダムで読みやすい API キー名（`key-cobalt-falcon-4f2a`）。
 - CSPRNG による強力なランダムパスワード。
@@ -123,6 +124,14 @@ GET  /api/console/v1/session  -> active_project.id
 POST /api/console/v1/projects/:id/api-keys   (Idempotency-Key) -> secret_key: ak_…
 ```
 
+## 受信箱プロバイダ
+
+- **emailmux**（既定）— 本物の `@gmail.com`。キー不要ですが IP 単位で制限あり。`proxy.txt` と併用を推奨。
+- **emailnator** — フォールバック。同じく本物の `@gmail.com`。
+- **mail.tm** — Gmail ではありません。必要時のみ `ABC_INBOX_FALLBACK=true` で有効化。
+
+`ABC_INBOX_PROVIDER=emailmux|emailnator|mailtm` · `ABC_EMAILMUX_API_KEY`（任意）。
+
 ## ローテーションプロキシ
 
 - **`proxy.txt` ファイル** — 最も簡単。プロジェクト直下に `proxy.txt` を置く
@@ -149,7 +158,7 @@ node src/index.js -n 25
 src/index.js         CLI: ワーカープール、リトライ、出力
 src/config.js        ABC_* 設定
 src/abliteration.js  Playwright による自動化
-src/emailnator.js    本物の @gmail.com 受信箱
+src/emailmux.js      本物の @gmail.com 受信箱
 src/mailtm.js        任意のフォールバック
 src/proxy.js         ローテーションプロキシプール
 src/output.js        JSON/CSV/txt エクスポータ

@@ -10,7 +10,8 @@
 [![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![Lizenz: MIT](https://img.shields.io/badge/Lizenz-MIT-3DA639?style=flat-square)](../LICENSE)
 [![Plattform](https://img.shields.io/badge/Plattform-abliteration.ai-FF5A3C?style=flat-square)](https://abliteration.ai/)
-[![Postfach](https://img.shields.io/badge/Postfach-emailnator-F59E0B?style=flat-square)](https://www.emailnator.com/)
+[![Inbox](https://img.shields.io/badge/Inbox-emailmux-F59E0B?style=flat-square)](https://emailmux.com/)
+[![Fallback](https://img.shields.io/badge/Fallback-emailnator-8B5CF6?style=flat-square)](https://www.emailnator.com/)
 [![Proxy](https://img.shields.io/badge/Proxy-Rotierend-06B6D4?style=flat-square)](../README.md#-rotating-proxies)
 [![Stealth](https://img.shields.io/badge/Stealth-Chromium-7C5CFF?style=flat-square)](../README.md#how-it-works)
 [![Gemacht mit](https://img.shields.io/badge/Gemacht%20mit-%E2%9D%A4%EF%B8%8F-EF4444?style=flat-square)]()
@@ -29,8 +30,8 @@ abliteration.ai. Für jedes Konto:
 
 1. wird der nächste **rotierende Proxy** zugewiesen (optional, aber dringend
    empfohlen);
-2. ein frisches, echtes `@gmail.com`-Postfach bei **emailnator** erstellt
-   (mit optionalem **mail.tm**-Fallback);
+2. ein frisches, echtes `@gmail.com`-Postfach bei **emailmux** erstellt
+   (mit **emailnator**- und optionalem **mail.tm**-Fallback);
 3. die Registrierung auf `abliteration.ai` über ein **stealth-gepatchtes
    Headless-Chromium** durchgeführt (damit die Cloudflare-Turnstile-Prüfung so
    durchläuft wie bei einem Menschen);
@@ -56,7 +57,7 @@ Dashboard, kein Cloud-Konto — nur ein Befehl.
 ## Funktionen
 
 - Ein Befehl erstellt beliebig viele Konten.
-- Echte `@gmail.com`-Postfächer über **emailnator** — ohne Konfiguration.
+- Echte `@gmail.com`-Postfächer über **emailmux** (emailnator-Fallback) — ohne Konfiguration.
 - Automatische E-Mail-Verifizierung (liest den 6-stelligen Code).
 - Zufällige, lesbare API-Schlüsselnamen (`key-cobalt-falcon-4f2a`).
 - Starke Passwörter, mit einem CSPRNG erzeugt.
@@ -129,6 +130,14 @@ GET  /api/console/v1/session  -> active_project.id
 POST /api/console/v1/projects/:id/api-keys   (Idempotency-Key) -> secret_key: ak_…
 ```
 
+## Postfach-Anbieter
+
+- **emailmux** (Standard) — echtes `@gmail.com`. Ohne Schlüssel, aber pro IP limitiert; mit `proxy.txt` kombinieren.
+- **emailnator** — Fallback, ebenfalls echtes `@gmail.com`.
+- **mail.tm** — kein Gmail; nur mit `ABC_INBOX_FALLBACK=true` aktivieren.
+
+`ABC_INBOX_PROVIDER=emailmux|emailnator|mailtm` · `ABC_EMAILMUX_API_KEY` (optional).
+
 ## Rotierende Proxys
 
 - **Datei `proxy.txt`** — am einfachsten. Lege eine `proxy.txt` neben das
@@ -156,7 +165,7 @@ node src/index.js -n 25
 src/index.js         CLI: Worker-Pool, Wiederholungen, Ausgabe
 src/config.js        Konfiguration ABC_*
 src/abliteration.js  Automatisierung mit Playwright
-src/emailnator.js    echte @gmail.com-Postfächer
+src/emailmux.js      echte @gmail.com-Postfächer
 src/mailtm.js        optionaler Fallback
 src/proxy.js         Pool rotierender Proxys
 src/output.js        JSON/CSV/txt-Exporteure
