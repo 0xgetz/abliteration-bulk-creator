@@ -101,6 +101,13 @@ Run the offline self-test at any time (no browser or network needed):
 npm test
 ```
 
+Before a big batch, confirm your proxies actually forward traffic:
+
+```bash
+node tests/check-proxies.js            # tests every line in proxy.txt
+node tests/check-proxies.js --file my-proxies.txt
+```
+
 ## Usage
 
 ```bash

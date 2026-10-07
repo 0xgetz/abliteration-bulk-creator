@@ -150,6 +150,8 @@ ABC_PROXY_COUNTRY=us \
 node src/index.js -n 25
 ```
 
+批量运行前先检测代理: `node tests/check-proxies.js`。
+
 ## 项目结构
 
 ```

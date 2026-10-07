@@ -12,6 +12,7 @@
     "start": "node src/index.js",
     "dry-run": "node src/index.js --dry-run",
     "test": "node tests/selftest.js",
+    "check-proxies": "node tests/check-proxies.js",
     "postinstall": "playwright install chromium"
   },
   "engines": {

@@ -152,6 +152,8 @@ ABC_PROXY_COUNTRY=us \
 node src/index.js -n 25
 ```
 
+大量実行の前にプロキシを確認: `node tests/check-proxies.js`。
+
 ## プロジェクト構成
 
 ```

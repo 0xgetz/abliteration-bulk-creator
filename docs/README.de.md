@@ -159,6 +159,8 @@ ABC_PROXY_COUNTRY=us \
 node src/index.js -n 25
 ```
 
+Prüfe deine Proxys vor einem großen Batch: `node tests/check-proxies.js`.
+
 ## Projektstruktur
 
 ```
