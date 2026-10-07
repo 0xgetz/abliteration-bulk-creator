@@ -65,7 +65,7 @@ just a command.
 ## Quick start
 
 ```bash
-git clone https://github.com/octra42/abliteration-bulk-creator.git
+git clone https://github.com/0xgetz/abliteration-bulk-creator.git
 cd abliteration-bulk-creator
 npm install          # installs Playwright + stealth plugin (headless Chromium)
 

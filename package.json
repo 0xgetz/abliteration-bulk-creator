@@ -37,10 +37,10 @@
   "author": "abliteration-bulk-creator contributors",
   "repository": {
     "type": "git",
-    "url": "https://github.com/octra42/abliteration-bulk-creator.git"
+    "url": "https://github.com/0xgetz/abliteration-bulk-creator.git"
   },
-  "homepage": "https://github.com/octra42/abliteration-bulk-creator#readme",
+  "homepage": "https://github.com/0xgetz/abliteration-bulk-creator#readme",
   "bugs": {
-    "url": "https://github.com/octra42/abliteration-bulk-creator/issues"
+    "url": "https://github.com/0xgetz/abliteration-bulk-creator/issues"
   }
 }
